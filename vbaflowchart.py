@@ -11,10 +11,11 @@ try:
         #proc_kind = xlwb.VBProject.VBComponents.vbext_ProcKind
         line_num = code_mod.CountOfDeclarationLines + 1
         count_of_lines = code_mod.CountOfLines
-
+        print('----------------')
+        print(i.name)
+        print('----------------')
         while(line_num < count_of_lines):
-            proc_name = code_mod.ProcOfLine(line_num, 0)
-            print(i.name)
+            proc_name = code_mod.ProcOfLine(line_num, 0)            
             print (proc_name[0])
             line_num = code_mod.ProcStartLine(proc_name[0], 0) + code_mod.ProcCountLines(proc_name[0], 0) + 1
 except Exception as e:

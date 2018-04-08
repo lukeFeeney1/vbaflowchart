@@ -1,5 +1,0 @@
-Run `sphinx-apidoc -o . ../../vbaflowchart' in this directory.
-
-This will generate `modules.rst' and `vbaflowchart.rst'.
-
-Then include `modules.rst' in your `index.rst' file.

@@ -2,56 +2,33 @@
 # -*- coding: utf-8 -*-
 """Program entry point"""
 
-from __future__ import print_function
+from win32com.client import Dispatch
 
-import argparse
-import sys
+wbpath = 'C:\\Users\\Later\\Desktop\\Book1.xlsm'
+xl = Dispatch("Excel.Application")
+xl.Visible = 0
+xlwb = xl.Workbooks.Open(wbpath)
 
-from vbaflowchart import metadata
+try:    
+    for i in xlwb.VBProject.VBComponents:        
+        code_mod = xlwb.VBProject.VBComponents(i.Name).CodeModule
+        #proc_kind = xlwb.VBProject.VBComponents.vbext_ProcKind
+        line_num = code_mod.CountOfDeclarationLines + 1
+        count_of_lines = code_mod.CountOfLines
+        print('----------------')
+        print(i.name)
+        print('----------------')
+        while(line_num < count_of_lines):
+            proc_name = code_mod.ProcOfLine(line_num, 0)            
+            print (proc_name[0])
+            line_num = code_mod.ProcStartLine(proc_name[0], 0) + code_mod.ProcCountLines(proc_name[0], 0) + 1
 
+except Exception as e:
+    print(e)
 
-def main(argv):
-    """Program entry point.
+finally:    
 
-    :param argv: command-line arguments
-    :type argv: :class:`list`
-    """
-    author_strings = []
-    for name, email in zip(metadata.authors, metadata.emails):
-        author_strings.append('Author: {0} <{1}>'.format(name, email))
+    xlwb.Close(True)
+    xl.Quit
 
-    epilog = '''
-{project} {version}
-
-{authors}
-URL: <{url}>
-'''.format(
-        project=metadata.project,
-        version=metadata.version,
-        authors='\n'.join(author_strings),
-        url=metadata.url)
-
-    arg_parser = argparse.ArgumentParser(
-        prog=argv[0],
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=metadata.description,
-        epilog=epilog)
-    arg_parser.add_argument(
-        '-V', '--version',
-        action='version',
-        version='{0} {1}'.format(metadata.project, metadata.version))
-
-    arg_parser.parse_args(args=argv[1:])
-
-    print(epilog)
-
-    return 0
-
-
-def entry_point():
-    """Zero-argument entry point for use with setuptools/distribute."""
-    raise SystemExit(main(sys.argv))
-
-
-if __name__ == '__main__':
-    entry_point()
+    xl = None

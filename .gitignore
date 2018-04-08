@@ -38,4 +38,4 @@ pip-log.txt
 /paver-minilib.zip
 
 #vscode stuff
-*.vscode
+.vscode/
